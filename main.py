@@ -36,32 +36,43 @@ def process_image(input_path, width=140, height=68):
 
     img = Image.open(input_path)
     frame_count = getattr(img, "n_frames", 1)
+    MAX_FRAMES = 30  # maximum frames to process
+    step = max(1, frame_count // MAX_FRAMES)
 
     print(f"Processing '{input_path}' - {frame_count} frame(s) detected...")
 
+    count = 0
+
     for i, frame in enumerate(ImageSequence.Iterator(img)):
+        if i % step != 0:  # skip frames proportionally
+            continue
+
+        frame_index = i // step  # new index for saved frames
+
+
         # Convert to RGB (remove alpha channel & palette)
         frame = frame.convert("RGB")
+
+        # Rotate 90° clockwise
+        frame = frame.rotate(-90, expand=True)
 
         # Resize to target size
         frame = resize_and_crop(frame, width, height)
 
         # Convert to 1-bit black/white with dithering
-        bw_frame = frame.convert("1")  # Dithered 1-bit
-
-        # Rotate 90° clockwise
-#        bw_frame = bw_frame.rotate(-90, expand=True)
+        frame = frame.convert("1")  # Dithered 1-bit
 
         # Convert to grayscale (L mode) for saving safety
-        bw_frame = bw_frame.convert("L")
+        frame = frame.convert("L")
 
         # 🔥 Strip all transparency and other metadata
-        bw_frame.info.pop("transparency", None)
+        frame.info.pop("transparency", None)
 
         # Save safely as PNG
-        output_path = os.path.join(output_folder, f"frame_{i:03d}.png")
-        bw_frame.save(output_path, "PNG")
+        output_path = os.path.join(output_folder, f"frame_{count:03d}.png")
+        frame.save(output_path, "PNG")
         print(f"✅ Saved {output_path}")
+        count += 1
 
     print("🎉 Conversion complete!")
 

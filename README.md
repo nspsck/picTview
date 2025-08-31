@@ -13,6 +13,8 @@ python3 main.py filename.xxx
 # Combine output of lvgl files into one art.c
 python3 generate.py path
 
+# Generate list of frames
+python3 num.py
 ```
 ## LVGL site
 [https://lvgl.io/tools/imageconverter](https://lvgl.io/tools/imageconverter)
