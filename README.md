@@ -1,6 +1,6 @@
 # picTview
 
-# Usage
+## Usage
 ```shell
 # Setup
 python3 -m venv venv
@@ -14,3 +14,6 @@ python3 main.py filename.xxx
 python3 generate.py path
 
 ```
+## LVGL site
+[https://lvgl.io/tools/imageconverter](https://lvgl.io/tools/imageconverter)
+color format: `CF_INDEXED_1BIT`, ouput format: `C array`.
